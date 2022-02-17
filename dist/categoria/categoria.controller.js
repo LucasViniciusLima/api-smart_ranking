@@ -16,12 +16,25 @@ exports.CategoriaController = void 0;
 const common_1 = require("@nestjs/common");
 const criar_categoria_dto_1 = require("./dtos/criar-categoria.dto");
 const categoria_service_1 = require("./categoria.service");
+const atualizar_categoria_dto_1 = require("./dtos/atualizar-categoria.dto");
 let CategoriaController = class CategoriaController {
     constructor(categoriaService) {
         this.categoriaService = categoriaService;
     }
     async criarCategoria(criarCategoriaDto) {
         return await this.categoriaService.criarCategoria(criarCategoriaDto);
+    }
+    async consultarTodasCategorias() {
+        return await this.categoriaService.consultarTodasCategorias();
+    }
+    async consultarCategoriaPorId(categoria) {
+        return await this.categoriaService.consultarCategoriaPeloId(categoria);
+    }
+    async atualizarCategoria(atualizarCategoriaDto, categoria) {
+        await this.categoriaService.atualizarCategoria(categoria, atualizarCategoriaDto);
+    }
+    async atribuirCategoriaJogador(params) {
+        return await this.categoriaService.atribuirCategoriaJogador(params);
     }
 };
 __decorate([
@@ -32,6 +45,35 @@ __decorate([
     __metadata("design:paramtypes", [criar_categoria_dto_1.CriarCategoriaDto]),
     __metadata("design:returntype", Promise)
 ], CategoriaController.prototype, "criarCategoria", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], CategoriaController.prototype, "consultarTodasCategorias", null);
+__decorate([
+    (0, common_1.Get)('/:categoria'),
+    __param(0, (0, common_1.Param)('categoria')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], CategoriaController.prototype, "consultarCategoriaPorId", null);
+__decorate([
+    (0, common_1.Put)('/:categoria'),
+    (0, common_1.UsePipes)(common_1.ValidationPipe),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Param)('categoria')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [atualizar_categoria_dto_1.AtualizarCategoriaDto, String]),
+    __metadata("design:returntype", Promise)
+], CategoriaController.prototype, "atualizarCategoria", null);
+__decorate([
+    (0, common_1.Post)('/:categoria/jogadores/:idJogador'),
+    __param(0, (0, common_1.Param)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], CategoriaController.prototype, "atribuirCategoriaJogador", null);
 CategoriaController = __decorate([
     (0, common_1.Controller)('api/v1/categoria'),
     __metadata("design:paramtypes", [categoria_service_1.CategoriaService])

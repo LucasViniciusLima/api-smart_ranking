@@ -14,7 +14,7 @@ exports.CategoriaSchema = new mongoose.Schema({
     ],
     jogadores: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Categoria'
+            ref: 'Jogador'
         }]
 }, { timestamps: true, collection: 'Categoria' });
 //# sourceMappingURL=categoria.schema.js.map

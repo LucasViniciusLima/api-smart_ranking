@@ -12,7 +12,7 @@ export const CategoriaSchema = new mongoose.Schema({
     ],
     jogadores: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Categoria'
+        ref: 'Jogador'
     }]
 }, { timestamps: true, collection: 'Categoria' });
 

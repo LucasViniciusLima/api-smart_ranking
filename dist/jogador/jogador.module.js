@@ -17,6 +17,7 @@ let JogadorModule = class JogadorModule {
 JogadorModule = __decorate([
     (0, common_1.Module)({
         imports: [mongoose_1.MongooseModule.forFeature([{ name: 'Jogador', schema: jogador_schema_1.JogadorSchema }])],
+        exports: [jogador_service_1.JogadorService],
         controllers: [jogador_controller_1.JogadorController],
         providers: [jogador_service_1.JogadorService]
     })
