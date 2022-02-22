@@ -1,8 +1,7 @@
-import { Evento } from "../interfaces/categoria-interface";
 import { ArrayMinSize, IsArray, IsOptional, IsString } from "class-validator";
+import { Evento } from "../interfaces/categoria-interface";
 
-export class AtualizarCategoriaDto{
-    
+export class AtualizarCategoriaDto{    
     @IsString()
     @IsOptional()
     descricao: string;
@@ -10,5 +9,4 @@ export class AtualizarCategoriaDto{
     @IsArray()
     @ArrayMinSize(1)
     eventos: Array<Evento>;
-
 }
