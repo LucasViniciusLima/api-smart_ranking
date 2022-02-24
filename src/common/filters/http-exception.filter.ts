@@ -23,8 +23,5 @@ export class AllExceptionFilter implements ExceptionFilter {
             path: request.url,
             error: message
         })
-
-
-
     }
 }
