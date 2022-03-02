@@ -7,7 +7,7 @@ export class CriarDesafioDto {
     dataHoraDesafio: Date;
 
     @IsNotEmpty()
-    solicitante: Jogador;
+    solicitante: Jogador["id"];
 
     @ArrayMinSize(2)
     @ArrayMaxSize(2)

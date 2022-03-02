@@ -6,6 +6,7 @@ const http_exception_filter_1 = require("./common/filters/http-exception.filter"
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.useGlobalFilters(new http_exception_filter_1.AllExceptionFilter);
+    app.enableCors();
     await app.listen(3000);
 }
 bootstrap();

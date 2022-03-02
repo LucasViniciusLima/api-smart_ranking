@@ -12,11 +12,17 @@ const desafio_service_1 = require("./desafio.service");
 const desafio_controller_1 = require("./desafio.controller");
 const mongoose_1 = require("@nestjs/mongoose");
 const desafio_schema_1 = require("./interfaces/desafio.schema");
+const jogador_module_1 = require("../jogador/jogador.module");
+const categoria_module_1 = require("../categoria/categoria.module");
 let DesafioModule = class DesafioModule {
 };
 DesafioModule = __decorate([
     (0, common_1.Module)({
-        imports: [mongoose_1.MongooseModule.forFeature([{ name: 'Desafio', schema: desafio_schema_1.DesafioSchema }])],
+        imports: [
+            mongoose_1.MongooseModule.forFeature([{ name: 'Desafio', schema: desafio_schema_1.DesafioSchema }]),
+            jogador_module_1.JogadorModule,
+            categoria_module_1.CategoriaModule
+        ],
         providers: [desafio_service_1.DesafioService],
         controllers: [desafio_controller_1.DesafioController]
     })

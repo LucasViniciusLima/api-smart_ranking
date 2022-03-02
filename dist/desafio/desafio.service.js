@@ -16,13 +16,28 @@ exports.DesafioService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const jogador_service_1 = require("../jogador/jogador.service");
+const categoria_service_1 = require("./../categoria/categoria.service");
 let DesafioService = class DesafioService {
-    constructor(desafioModel) {
+    constructor(desafioModel, jogadorService, categoriaService) {
         this.desafioModel = desafioModel;
+        this.jogadorService = jogadorService;
+        this.categoriaService = categoriaService;
     }
     async criarDesafio(criarDesafioDto) {
         const { dataHoraDesafio } = criarDesafioDto;
+        const { jogadores } = criarDesafioDto;
+        const { solicitante } = criarDesafioDto;
+        const idJogador1 = jogadores[0]._id;
+        const idJogador2 = jogadores[1]._id;
         const desafioEncontrado = await this.desafioModel.findOne({ dataHoraDesafio }).exec();
+        await this.jogadorService.consultarJogadorPeloId(idJogador1);
+        await this.jogadorService.consultarJogadorPeloId(idJogador2);
+        const jogadorSolicitanteEncontrado = await this.jogadorService.consultarJogadorPeloId(solicitante);
+        await this.categoriaService.consultarCategoriaPeloId(jogadorSolicitanteEncontrado.ranking);
+        if (!(idJogador1 == solicitante || idJogador2 == solicitante)) {
+            throw new common_1.BadRequestException(`O solicitante não está na lista de competidores do desafio`);
+        }
         if (desafioEncontrado) {
             throw new common_1.BadRequestException(`Um desafio em ${dataHoraDesafio} já foi encontrado`);
         }
@@ -35,7 +50,9 @@ let DesafioService = class DesafioService {
 DesafioService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)('Desafio')),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        jogador_service_1.JogadorService,
+        categoria_service_1.CategoriaService])
 ], DesafioService);
 exports.DesafioService = DesafioService;
 //# sourceMappingURL=desafio.service.js.map

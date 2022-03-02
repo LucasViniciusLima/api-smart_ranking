@@ -21,6 +21,7 @@ CategoriaModule = __decorate([
             mongoose_1.MongooseModule.forFeature([{ name: 'Categoria', schema: categoria_schema_1.CategoriaSchema }]),
             jogador_module_1.JogadorModule
         ],
+        exports: [categoria_service_1.CategoriaService],
         controllers: [categoria_controller_1.CategoriaController],
         providers: [categoria_service_1.CategoriaService]
     })
