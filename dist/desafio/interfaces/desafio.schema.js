@@ -8,11 +8,11 @@ exports.DesafioSchema = new mongoose.Schema({
     dataHoraSolicitacao: { type: Date },
     dataHoraResposta: { type: Date },
     solicitante: { type: mongoose.Schema.Types.ObjectId, ref: 'Jogador' },
-    categoria: String,
+    categoria: { type: String },
     jogadores: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Jogador'
         }],
     partida: { type: mongoose.Schema.Types.ObjectId, ref: 'Partida' }
-}, { timestamps: true, collection: 'Desafio' });
+}, { timestamps: true, collection: 'desafios' });
 //# sourceMappingURL=desafio.schema.js.map

@@ -23,6 +23,9 @@ let DesafioController = class DesafioController {
     async criarDesafio(criarDesafioDto) {
         return await this.desafioService.criarDesafio(criarDesafioDto);
     }
+    async consultarTodosDesafios() {
+        return await this.desafioService.consultarTodosDesafios();
+    }
 };
 __decorate([
     (0, common_1.Post)(),
@@ -32,6 +35,12 @@ __decorate([
     __metadata("design:paramtypes", [criar_desafio_dto_1.CriarDesafioDto]),
     __metadata("design:returntype", Promise)
 ], DesafioController.prototype, "criarDesafio", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], DesafioController.prototype, "consultarTodosDesafios", null);
 DesafioController = __decorate([
     (0, common_1.Controller)('api/v1/desafio'),
     __metadata("design:paramtypes", [desafio_service_1.DesafioService])

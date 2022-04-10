@@ -14,12 +14,16 @@ const mongoose_1 = require("@nestjs/mongoose");
 const desafio_schema_1 = require("./interfaces/desafio.schema");
 const jogador_module_1 = require("../jogador/jogador.module");
 const categoria_module_1 = require("../categoria/categoria.module");
+const partida_schema_1 = require("./interfaces/partida.schema");
 let DesafioModule = class DesafioModule {
 };
 DesafioModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: 'Desafio', schema: desafio_schema_1.DesafioSchema }]),
+            mongoose_1.MongooseModule.forFeature([
+                { name: 'Desafio', schema: desafio_schema_1.DesafioSchema },
+                { name: 'Partida', schema: partida_schema_1.PartidaSchema }
+            ]),
             jogador_module_1.JogadorModule,
             categoria_module_1.CategoriaModule
         ],

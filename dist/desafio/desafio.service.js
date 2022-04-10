@@ -18,39 +18,50 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const jogador_service_1 = require("../jogador/jogador.service");
 const categoria_service_1 = require("./../categoria/categoria.service");
+const desafio_status_enum_1 = require("./interfaces/desafio-status.enum");
 let DesafioService = class DesafioService {
-    constructor(desafioModel, jogadorService, categoriaService) {
+    constructor(desafioModel, partidaModel, jogadorService, categoriaService) {
         this.desafioModel = desafioModel;
+        this.partidaModel = partidaModel;
         this.jogadorService = jogadorService;
         this.categoriaService = categoriaService;
     }
     async criarDesafio(criarDesafioDto) {
-        const { dataHoraDesafio } = criarDesafioDto;
-        const { jogadores } = criarDesafioDto;
-        const { solicitante } = criarDesafioDto;
-        const idJogador1 = jogadores[0]._id;
-        const idJogador2 = jogadores[1]._id;
-        const desafioEncontrado = await this.desafioModel.findOne({ dataHoraDesafio }).exec();
-        await this.jogadorService.consultarJogadorPeloId(idJogador1);
-        await this.jogadorService.consultarJogadorPeloId(idJogador2);
-        const jogadorSolicitanteEncontrado = await this.jogadorService.consultarJogadorPeloId(solicitante);
-        await this.categoriaService.consultarCategoriaPeloId(jogadorSolicitanteEncontrado.ranking);
-        if (!(idJogador1 == solicitante || idJogador2 == solicitante)) {
-            throw new common_1.BadRequestException(`O solicitante não está na lista de competidores do desafio`);
+        const jogadores = await this.jogadorService.consultarTodosJogadores();
+        criarDesafioDto.jogadores.map(jogadorDto => {
+            const jogadorFilter = jogadores.filter(jogador => jogador._id == jogadorDto._id);
+            if (jogadorFilter.length == 0) {
+                throw new common_1.BadRequestException(`O id ${jogadorDto._id} não é um jogador!`);
+            }
+        });
+        const solicitanteEhJogadorDaPartida = criarDesafioDto.jogadores.filter(jogador => jogador._id == criarDesafioDto.solicitante);
+        if (solicitanteEhJogadorDaPartida.length == 0) {
+            throw new common_1.BadRequestException(`O solicitante deve ser um jogador da partida!`);
         }
-        if (desafioEncontrado) {
-            throw new common_1.BadRequestException(`Um desafio em ${dataHoraDesafio} já foi encontrado`);
+        const categoriaDoJogador = await this.categoriaService.consultarCategoriaDoJogador(criarDesafioDto.solicitante);
+        if (!categoriaDoJogador) {
+            throw new common_1.BadRequestException(`O solicitante precisa estar registradfo em uma categoria!`);
         }
-        const novoDesafio = new this.desafioModel(criarDesafioDto);
-        novoDesafio.dataHoraSolicitacao = new Date();
-        novoDesafio.status = 'PENDENTE';
-        return await novoDesafio.save();
+        const desafioCriado = new this.desafioModel(criarDesafioDto);
+        desafioCriado.categoria = categoriaDoJogador.categoria;
+        desafioCriado.dataHoraSolicitacao = new Date();
+        desafioCriado.status = desafio_status_enum_1.DesafioStatus.PENDENTE;
+        return await desafioCriado.save();
+    }
+    async consultarTodosDesafios() {
+        return await this.desafioModel.find()
+            .populate('jogadores')
+            .populate('solicitante')
+            .populate('partida')
+            .exec();
     }
 };
 DesafioService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)('Desafio')),
+    __param(1, (0, mongoose_1.InjectModel)('Partida')),
     __metadata("design:paramtypes", [mongoose_2.Model,
+        mongoose_2.Model,
         jogador_service_1.JogadorService,
         categoria_service_1.CategoriaService])
 ], DesafioService);

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JogadorService } from 'src/jogador/jogador.service';
@@ -25,16 +25,14 @@ export class DesafioService {
             if (jogadorFilter.length == 0) {
                 throw new BadRequestException(`O id ${jogadorDto._id} não é um jogador!`);
             }
-
         });
 
-        const solicitanteEhJogadorDaPartida = await criarDesafioDto.jogadores.filter(jogador => {
-            jogador._id == criarDesafioDto.solicitante._id;
-        });
+        const solicitanteEhJogadorDaPartida = criarDesafioDto.jogadores.filter(jogador => jogador._id == criarDesafioDto.solicitante);
 
-        if (solicitanteEhJogadorDaPartida.length == 0) {
-            throw new BadRequestException(`O solicitante deve ser um jogador da partida`);
+        if(solicitanteEhJogadorDaPartida.length == 0) {
+            throw new BadRequestException(`O solicitante deve ser um jogador da partida!`)
         }
+
 
         const categoriaDoJogador = await this.categoriaService.consultarCategoriaDoJogador(criarDesafioDto.solicitante);
 
@@ -57,5 +55,5 @@ export class DesafioService {
             .exec();
     }
 
-    
+
 }

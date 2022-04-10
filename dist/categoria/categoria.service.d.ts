@@ -8,6 +8,7 @@ export declare class CategoriaService {
     private readonly jogadorService;
     constructor(categoriaModel: Model<Categoria>, jogadorService: JogadorService);
     criarCategoria(criarCategoriaDto: CriarCategoriaDto): Promise<Categoria>;
+    consultarCategoriaDoJogador(idJogador: any): Promise<Categoria>;
     consultarTodasCategorias(): Promise<Array<Categoria>>;
     consultarCategoriaPeloId(categoria: string): Promise<Categoria>;
     atualizarCategoria(categoria: string, atualizarCategoriaDto: AtualizarCategoriaDto): Promise<void>;

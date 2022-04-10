@@ -5,4 +5,5 @@ export declare class DesafioController {
     private readonly desafioService;
     constructor(desafioService: DesafioService);
     criarDesafio(criarDesafioDto: CriarDesafioDto): Promise<Desafio>;
+    consultarTodosDesafios(): Promise<Desafio[]>;
 }

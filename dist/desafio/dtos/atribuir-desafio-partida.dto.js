@@ -9,24 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CriarDesafioDto = void 0;
+exports.AtribuirDesafioPartidaDto = void 0;
 const class_validator_1 = require("class-validator");
-class CriarDesafioDto {
+class AtribuirDesafioPartidaDto {
 }
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsDateString)(),
-    __metadata("design:type", Date)
-], CriarDesafioDto.prototype, "dataHoraDesafio", void 0);
+    __metadata("design:type", Object)
+], AtribuirDesafioPartidaDto.prototype, "def", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Object)
-], CriarDesafioDto.prototype, "solicitante", void 0);
-__decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayMinSize)(2),
-    (0, class_validator_1.ArrayMaxSize)(2),
     __metadata("design:type", Array)
-], CriarDesafioDto.prototype, "jogadores", void 0);
-exports.CriarDesafioDto = CriarDesafioDto;
-//# sourceMappingURL=criar-desafio.dto.js.map
+], AtribuirDesafioPartidaDto.prototype, "resultado", void 0);
+exports.AtribuirDesafioPartidaDto = AtribuirDesafioPartidaDto;
+//# sourceMappingURL=atribuir-desafio-partida.dto.js.map

@@ -31,6 +31,14 @@ let CategoriaService = class CategoriaService {
         const categoriaCriada = new this.categoriaModel(criarCategoriaDto);
         return await categoriaCriada.save();
     }
+    async consultarCategoriaDoJogador(idJogador) {
+        const jogadores = await this.jogadorService.consultarTodosJogadores();
+        const jogadorFilter = jogadores.filter(jogador => jogador._id == idJogador);
+        if (jogadorFilter.length == 0) {
+            throw new common_1.BadRequestException(`O id ${idJogador} não é um jogador!`);
+        }
+        return await this.categoriaModel.findOne().where('jogadores').in(idJogador).exec();
+    }
     async consultarTodasCategorias() {
         return await this.categoriaModel.find().populate("jogadores").exec();
     }
@@ -53,7 +61,11 @@ let CategoriaService = class CategoriaService {
         const idJogador = params['idJogador'];
         const categoriaEncontrada = await this.categoriaModel.findOne({ categoria }).exec();
         const jogadorJaCadastradoCategoria = await this.categoriaModel.find({ categoria }).where('jogadores').in(idJogador).exec();
-        await this.jogadorService.consultarJogadorPeloId(idJogador);
+        const jogadores = await this.jogadorService.consultarTodosJogadores();
+        const jogadorFilter = jogadores.filter(jogador => jogador._id == idJogador);
+        if (jogadorFilter.length == 0) {
+            throw new common_1.BadRequestException(`O id ${idJogador} não é um jogador!`);
+        }
         if (!categoriaEncontrada) {
             throw new common_1.NotFoundException(`Categoria ${categoria} não encontrada`);
         }
