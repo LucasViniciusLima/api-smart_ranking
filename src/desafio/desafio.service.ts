@@ -55,5 +55,22 @@ export class DesafioService {
             .exec();
     }
 
+    async consultarDesafiosJogador(_id: any): Promise<Desafio[]>{
+        const jogadores = await this.jogadorService.consultarTodosJogadores();
+        const jogadorFilter = jogadores.filter(jogador => jogador._id == _id);
+
+        if(jogadorFilter.length == 0){
+            throw new BadRequestException(`O id ${_id} não é um jogador`);
+        }
+
+        return await this.desafioModel.find()
+        .where('jogadores')
+        .in(_id)
+        .populate('jogadores')
+        .populate('solicitante')
+        .populate('partida')
+        .exec();
+    }
+
 
 }
