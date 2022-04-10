@@ -5,10 +5,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DesafioSchema } from './interfaces/desafio.schema';
 import { JogadorModule } from 'src/jogador/jogador.module';
 import { CategoriaModule } from 'src/categoria/categoria.module';
+import { PartidaSchema } from './interfaces/partida.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'Desafio', schema: DesafioSchema }]),
+    MongooseModule.forFeature([
+      { name: 'Desafio', schema: DesafioSchema },
+      { name: 'Partida', schema: PartidaSchema}
+    ]),
     JogadorModule,
     CategoriaModule
   ],
