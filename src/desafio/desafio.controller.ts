@@ -25,10 +25,11 @@ export class DesafioController {
 
     @Put('/:desafio')
     async atualizarDesafio(
-        @Param('desafio') desafio: string,
-        @Body(DesafioStatusValidacaoPipe) atualizarDesafioDto: AtualizarDesafioDto
-    ): Promise<void> {
-        return this.desafioService.atualizarDesafio(desafio, atualizarDesafioDto);
+        @Param('desafio') id: string,
+        @Body(DesafioStatusValidacaoPipe) atualizarDesafioDto: AtualizarDesafioDto): Promise<void> {
+        return this.desafioService.atualizarDesafio(id, atualizarDesafioDto);
     }
+
+
 
 }

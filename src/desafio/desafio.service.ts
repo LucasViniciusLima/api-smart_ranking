@@ -73,15 +73,23 @@ export class DesafioService {
             .exec();
     }
 
-    async atualizarDesafio(desafio: string, atualizarDesafioDto: AtualizarDesafioDto): Promise<void> {
-        const desafioEncontrado = await this.desafioModel.findOne({ _id: desafio }).exec();
+    async atualizarDesafio(id: string, atualizarDesafioDto: AtualizarDesafioDto): Promise<void> {
+        const desafioEncontrado = await this.desafioModel.findOne({ _id: id }).exec();
 
         if (!desafioEncontrado) {
-            throw new BadRequestException(`O id ${desafio} não é um desafio`);
+            throw new BadRequestException(`O id ${id} não é um desafio`);
         }
 
-        desafioEncontrado.update({ $set: atualizarDesafioDto }).exec();
+        if (atualizarDesafioDto.status) {
+            desafioEncontrado.dataHoraResposta = new Date();
+        }
+
+        desafioEncontrado.status = atualizarDesafioDto.status;
+        desafioEncontrado.dataHoraDesafio = atualizarDesafioDto.dataHoraDesafio;
+
+        await this.desafioModel.findOneAndUpdate({ id }, { $set: desafioEncontrado }).exec();
     }
 
+    
 
 }
