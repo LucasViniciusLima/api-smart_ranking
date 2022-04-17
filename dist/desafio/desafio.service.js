@@ -55,6 +55,27 @@ let DesafioService = class DesafioService {
             .populate('partida')
             .exec();
     }
+    async consultarDesafiosJogador(_id) {
+        const jogadores = await this.jogadorService.consultarTodosJogadores();
+        const jogadorFilter = jogadores.filter(jogador => jogador._id == _id);
+        if (jogadorFilter.length == 0) {
+            throw new common_1.BadRequestException(`O id ${_id} não é um jogador`);
+        }
+        return await this.desafioModel.find()
+            .where('jogadores')
+            .in(_id)
+            .populate('jogadores')
+            .populate('solicitante')
+            .populate('partida')
+            .exec();
+    }
+    async atualizarDesafio(desafio, atualizarDesafioDto) {
+        const desafioEncontrado = await this.desafioModel.findOne({ _id: desafio }).exec();
+        if (!desafioEncontrado) {
+            throw new common_1.BadRequestException(`O id ${desafio} não é um desafio`);
+        }
+        desafioEncontrado.update({ $set: atualizarDesafioDto }).exec();
+    }
 };
 DesafioService = __decorate([
     (0, common_1.Injectable)(),

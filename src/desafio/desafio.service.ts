@@ -6,6 +6,7 @@ import { CriarDesafioDto } from './dtos/criar-desafio.dto';
 import { Desafio, Partida } from './interfaces/desafio.interface';
 import { CategoriaService } from './../categoria/categoria.service';
 import { DesafioStatus } from './interfaces/desafio-status.enum';
+import { AtualizarDesafioDto } from './dtos/atualizar-desafio.dto';
 
 @Injectable()
 export class DesafioService {
@@ -29,7 +30,7 @@ export class DesafioService {
 
         const solicitanteEhJogadorDaPartida = criarDesafioDto.jogadores.filter(jogador => jogador._id == criarDesafioDto.solicitante);
 
-        if(solicitanteEhJogadorDaPartida.length == 0) {
+        if (solicitanteEhJogadorDaPartida.length == 0) {
             throw new BadRequestException(`O solicitante deve ser um jogador da partida!`)
         }
 
@@ -55,21 +56,31 @@ export class DesafioService {
             .exec();
     }
 
-    async consultarDesafiosJogador(_id: any): Promise<Desafio[]>{
+    async consultarDesafiosJogador(_id: any): Promise<Desafio[]> {
         const jogadores = await this.jogadorService.consultarTodosJogadores();
         const jogadorFilter = jogadores.filter(jogador => jogador._id == _id);
 
-        if(jogadorFilter.length == 0){
+        if (jogadorFilter.length == 0) {
             throw new BadRequestException(`O id ${_id} não é um jogador`);
         }
 
         return await this.desafioModel.find()
-        .where('jogadores')
-        .in(_id)
-        .populate('jogadores')
-        .populate('solicitante')
-        .populate('partida')
-        .exec();
+            .where('jogadores')
+            .in(_id)
+            .populate('jogadores')
+            .populate('solicitante')
+            .populate('partida')
+            .exec();
+    }
+
+    async atualizarDesafio(desafio: string, atualizarDesafioDto: AtualizarDesafioDto): Promise<void> {
+        const desafioEncontrado = await this.desafioModel.findOne({ _id: desafio }).exec();
+
+        if (!desafioEncontrado) {
+            throw new BadRequestException(`O id ${desafio} não é um desafio`);
+        }
+
+        desafioEncontrado.update({ $set: atualizarDesafioDto }).exec();
     }
 
 

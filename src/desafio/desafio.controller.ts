@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { DesafioService } from './desafio.service';
 import { Desafio } from './interfaces/desafio.interface';
 import { CriarDesafioDto } from './dtos/criar-desafio.dto';
+import { AtualizarDesafioDto } from './dtos/atualizar-desafio.dto';
+import { DesafioStatusValidacaoPipe } from './pipes/desafio-status-validation-pipe';
 
 @Controller('api/v1/desafio')
 export class DesafioController {
@@ -21,5 +23,12 @@ export class DesafioController {
             : await this.desafioService.consultarTodosDesafios();
     }
 
+    @Put('/:desafio')
+    async atualizarDesafio(
+        @Param('desafio') desafio: string,
+        @Body(DesafioStatusValidacaoPipe) atualizarDesafioDto: AtualizarDesafioDto
+    ): Promise<void> {
+        return this.desafioService.atualizarDesafio(desafio, atualizarDesafioDto);
+    }
 
 }
