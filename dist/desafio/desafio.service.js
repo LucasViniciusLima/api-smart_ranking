@@ -69,12 +69,48 @@ let DesafioService = class DesafioService {
             .populate('partida')
             .exec();
     }
-    async atualizarDesafio(desafio, atualizarDesafioDto) {
-        const desafioEncontrado = await this.desafioModel.findOne({ _id: desafio }).exec();
+    async atualizarDesafio(id, atualizarDesafioDto) {
+        const desafioEncontrado = await this.desafioModel.findOne({ _id: id }).exec();
         if (!desafioEncontrado) {
-            throw new common_1.BadRequestException(`O id ${desafio} não é um desafio`);
+            throw new common_1.BadRequestException(`O id ${id} não é um desafio`);
         }
-        desafioEncontrado.update({ $set: atualizarDesafioDto }).exec();
+        if (atualizarDesafioDto.status) {
+            desafioEncontrado.dataHoraResposta = new Date();
+        }
+        desafioEncontrado.status = atualizarDesafioDto.status;
+        desafioEncontrado.dataHoraDesafio = atualizarDesafioDto.dataHoraDesafio;
+        await this.desafioModel.findOneAndUpdate({ id }, { $set: desafioEncontrado }).exec();
+    }
+    async atribuirDesafioPartida(_id, atribuirDesafioPartidaDto) {
+        const desafioEncontrado = await this.desafioModel.findOne({ _id }).exec();
+        if (!desafioEncontrado) {
+            throw new common_1.BadRequestException(`O id ${_id} não é um desafio`);
+        }
+        const jogadorFilter = await desafioEncontrado.jogadores.filter(jogador => jogador._id == atribuirDesafioPartidaDto.def);
+        if (jogadorFilter.length == 0) {
+            throw new common_1.BadRequestException(`O jogador vencedor não faz parte do desafio`);
+        }
+        const partidaCriada = new this.partidaModel(atribuirDesafioPartidaDto);
+        partidaCriada.categoria = desafioEncontrado.categoria;
+        partidaCriada.jogadores = desafioEncontrado.jogadores;
+        const resultado = await partidaCriada.save();
+        desafioEncontrado.status = desafio_status_enum_1.DesafioStatus.REALIZADO;
+        desafioEncontrado.partida = resultado._id;
+        try {
+            await this.desafioModel.findOneAndUpdate({ _id }, { $set: desafioEncontrado }).exec();
+        }
+        catch (error) {
+            await this.partidaModel.deleteOne({ _id: resultado._id }).exec();
+            throw new common_1.InternalServerErrorException();
+        }
+    }
+    async deletarDesafio(_id) {
+        const desafioEncontrado = await this.desafioModel.findById(_id).exec();
+        if (!desafioEncontrado) {
+            throw new common_1.BadRequestException(`Desafio ${_id} não cadastrado`);
+        }
+        desafioEncontrado.status = desafio_status_enum_1.DesafioStatus.CANCELADO;
+        await this.desafioModel.findOneAndUpdate({ _id }, { $set: desafioEncontrado });
     }
 };
 DesafioService = __decorate([

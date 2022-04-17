@@ -18,6 +18,7 @@ const desafio_service_1 = require("./desafio.service");
 const criar_desafio_dto_1 = require("./dtos/criar-desafio.dto");
 const atualizar_desafio_dto_1 = require("./dtos/atualizar-desafio.dto");
 const desafio_status_validation_pipe_1 = require("./pipes/desafio-status-validation-pipe");
+const atribuir_desafio_partida_dto_1 = require("./dtos/atribuir-desafio-partida.dto");
 let DesafioController = class DesafioController {
     constructor(desafioService) {
         this.desafioService = desafioService;
@@ -29,8 +30,14 @@ let DesafioController = class DesafioController {
         return _id ? await this.desafioService.consultarDesafiosJogador(_id)
             : await this.desafioService.consultarTodosDesafios();
     }
-    async atualizarDesafio(desafio, atualizarDesafioDto) {
-        return this.desafioService.atualizarDesafio(desafio, atualizarDesafioDto);
+    async atualizarDesafio(id, atualizarDesafioDto) {
+        return this.desafioService.atualizarDesafio(id, atualizarDesafioDto);
+    }
+    async atribuirDesafioPartida(atribuirDesafioPartidaDto, id) {
+        return await this.desafioService.atribuirDesafioPartida(id, atribuirDesafioPartidaDto);
+    }
+    async deletarDesafio(id) {
+        return await this.desafioService.deletarDesafio(id);
     }
 };
 __decorate([
@@ -56,6 +63,21 @@ __decorate([
     __metadata("design:paramtypes", [String, atualizar_desafio_dto_1.AtualizarDesafioDto]),
     __metadata("design:returntype", Promise)
 ], DesafioController.prototype, "atualizarDesafio", null);
+__decorate([
+    (0, common_1.Post)('/:desafio/partida/'),
+    __param(0, (0, common_1.Body)(common_1.ValidationPipe)),
+    __param(1, (0, common_1.Param)('desafio')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [atribuir_desafio_partida_dto_1.AtribuirDesafioPartidaDto, String]),
+    __metadata("design:returntype", Promise)
+], DesafioController.prototype, "atribuirDesafioPartida", null);
+__decorate([
+    (0, common_1.Delete)('/:_id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], DesafioController.prototype, "deletarDesafio", null);
 DesafioController = __decorate([
     (0, common_1.Controller)('api/v1/desafio'),
     __metadata("design:paramtypes", [desafio_service_1.DesafioService])
